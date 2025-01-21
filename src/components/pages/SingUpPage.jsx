@@ -438,6 +438,8 @@
 // export default SignUpPage;
 
 
+
+
 import React, { useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
@@ -445,29 +447,22 @@ import Logo from "../utils/Logo";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const SignUpPage = () => {
-  const [confirmPasswords, setConfirmPassword] = useState({
+  const [formData, setFormData] = useState({
+    username: "",
     password: "",
-    confirmPassword: ""});
-    const [formData, setFormData] = useState({
-      username: "",
-      password: confirmPasswords.password,
-      email: "",
-      contact: "",
-      userId: uuidv4(),
-    });
+    confirmPassword: "",
+    email: "",
+    contact: "",
+    userId: uuidv4(),
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setConfirmPassword({ ...formData, [name]: value });
-  };
-
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  }
+  };
 
   // Toggle password visibility
   const togglePasswordVisibility = () => {
@@ -481,8 +476,8 @@ const SignUpPage = () => {
     if (!formData.username) newErrors.username = "Username is required.";
     if (!formData.email) newErrors.email = "Email is required.";
     if (!formData.contact) newErrors.contact = "Contact number is required.";
-    if (!confirmPasswords.password) newErrors.password = "Password is required.";
-    if (!confirmPasswords.confirmPassword)
+    if (!formData.password) newErrors.password = "Password is required.";
+    if (!formData.confirmPassword)
       newErrors.confirmPassword = "Please confirm your password.";
     if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match.";
@@ -499,8 +494,10 @@ const SignUpPage = () => {
       return;
     }
 
+    const { confirmPassword, ...userData } = formData; // Exclude confirmPassword from payload
+
     try {
-      const response = await axios.post("http://116.75.62.44:8000/adduser", formData);
+      const response = await axios.post("http://116.75.62.44:8000/adduser", userData);
       console.log("User created successfully:", response.data);
       alert("User created successfully!");
     } catch (error) {
@@ -559,7 +556,7 @@ const SignUpPage = () => {
               <input
                 name={field}
                 value={formData[field]}
-                onChange={handlePasswordChange}
+                onChange={handleChange}
                 type={showPassword ? "text" : "password"}
                 className="p-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder={index === 0 ? "Password" : "Confirm Password"}
@@ -569,7 +566,7 @@ const SignUpPage = () => {
                 type="button"
                 onClick={togglePasswordVisibility}
                 className="absolute right-2 top-2/4 transform -translate-y-2/4 text-gray-500 hover:text-gray-700"
-                aria-label={`Toggle ${index === 0 ? "Password" : "Confirm Password"} Visibility`}
+                aria-label="Toggle Password Visibility"
               >
                 {showPassword ? (
                   <AiFillEye size={20} />
@@ -648,5 +645,6 @@ const SignUpPage = () => {
     </div>
   );
 };
+
 
 export default SignUpPage;

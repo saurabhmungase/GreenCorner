@@ -142,8 +142,7 @@ const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const user = userdata.find(
-      (data) =>
+    const user = userdata.find((data) =>
         data.email === formData.email && data.password === formData.password
     );
 
@@ -170,7 +169,7 @@ const LoginPage = () => {
       {/* Left Section */}
       <section className="hidden lg:flex w-1/2 h-full justify-center items-center bg-white shadow-md">
         <img
-          src="src/assets/indoor-plants-studio.png"
+          src="src\assets\plant-8360681_1920.png"
           className="h-[90%] rounded-3xl"
           alt="Indoor Plants"
         />

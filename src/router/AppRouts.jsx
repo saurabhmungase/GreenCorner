@@ -9,6 +9,9 @@ import Accessories from "../components/pages/Accessories";
 import Seeds from "../components/pages/Seeds";
 import Favorites from "../components/pages/Favorites";
 import Cart from "../components/pages/Cart";
+import PageNotFound from "../components/pages/PageNotFound";
+import ProductDetails from "../components/utils/ProductDetails";
+import AddPlant from "../components/pages/AddPlant";
 // import Hero from "../components/Hero";  // Import Hero component here
 
 export let router = createBrowserRouter([
@@ -44,6 +47,10 @@ export let router = createBrowserRouter([
         path: "cart",
         element: <Cart />,
       },
+      {
+        path: '/details',
+        element: <ProductDetails></ProductDetails>,
+      }
     ],
   },
   {
@@ -54,4 +61,13 @@ export let router = createBrowserRouter([
     path: "/signup",
     element: <SingUpPage />,
   },
+  {
+    path: "*",
+    element : <PageNotFound></PageNotFound>
+    
+  },
+  // {
+  //   path : '/addplant',
+  //   children : <AddPlant/>
+  // }
 ]);

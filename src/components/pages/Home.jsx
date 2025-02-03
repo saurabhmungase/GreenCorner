@@ -3,12 +3,12 @@
 // import ShopByCategories from './ShopByCategories'
 
 // const Home = () => {
-  
+
 //   return (
 //     <div>
 //       <section >
 //       <img src="src\assets\plants_1.webp" className='w-full' alt="" />
-      
+
 //       </section>
 //       <section className="flex flex-wrap justify-evenly gap-4 m-9">
 //         <a href="">
@@ -43,13 +43,12 @@
 //       <section>
 //         <ShopByCategories></ShopByCategories>
 //       </section>
-      
+
 //     </div>
 //   )
 // }
 
 // export default Home
-
 
 // import React from "react";
 // import NewlyLaunch from "./NewlyLaunch";
@@ -112,7 +111,6 @@
 // };
 
 // export default Home;
-
 
 // import React from "react";
 // import NewlyLaunch from "./NewlyLaunch";
@@ -194,7 +192,6 @@
 // };
 
 // export default Home;
-
 
 // import React from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -331,7 +328,7 @@
 //           </button>
 //         </div>
 //       </section>
-      
+
 //        {/* Categories Section */}
 //        <section className="py-10">
 //          <h2 className="text-3xl font-bold text-center text-[#21543D] mb-8">
@@ -365,7 +362,6 @@
 // };
 
 // export default Home;
-
 
 // import React from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -475,7 +471,6 @@
 // };
 
 // export default Home;
-
 
 // import React, { useEffect, useRef } from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -642,7 +637,6 @@
 // };
 
 // export default Home;
-
 
 // import React, { useEffect, useRef } from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -832,7 +826,6 @@
 
 // export default Home;
 
-
 import React, { useEffect, useRef, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
@@ -850,11 +843,7 @@ const CategoryCard = ({ img, title }) => (
     href="#"
     className="bg-white rounded-lg shadow-md w-48 p-6 flex flex-col items-center hover:shadow-xl hover:scale-105 transition-transform"
   >
-    <img
-      src={img}
-      alt={title}
-      className="h-36 w-auto mb-4 object-contain"
-    />
+    <img src={img} alt={title} className="h-36 w-auto mb-4 object-contain" />
     <h3 className="text-center text-gray-700 font-semibold text-lg">{title}</h3>
   </a>
 );
@@ -914,27 +903,33 @@ const Home = () => {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 1.4,
-        delay: 2,
+        duration: 1,
+        delay: 1,
         ease: "expo.out",
       }
     );
   }, []);
 
-  const heroImages = useMemo(() => [
-    "/src/assets/heroimg1.png",
-    "/src/assets/heroimg2.jpg",
-    "/src/assets/heroimg3.jpg",
-    "/src/assets/heroimg4.jpg",
-  ], []);
+  const heroImages = useMemo(
+    () => [
+      "/src/assets/heroimg1.png",
+      "/src/assets/heroimg2.jpg",
+      "/src/assets/heroimg3.jpg",
+      "/src/assets/heroimg4.jpg",
+    ],
+    []
+  );
 
-  const categories = useMemo(() => [
-    { img: "src/assets/10inchplant.png", title: "10 Inches Pots" },
-    { img: "src/assets/8inchimage.png", title: "8 Inches Pots" },
-    { img: "src/assets/5inchimage.png", title: "5.5 Inches Pots" },
-    { img: "src/assets/Plantfood.png", title: "Plant Food" },
-    { img: "src/assets/plantcare.png", title: "Plant Care" },
-  ], []);
+  const categories = useMemo(
+    () => [
+      { img: "src/assets/10inchplant.png", title: "10 Inches Pots" },
+      { img: "src/assets/8inchimage.png", title: "8 Inches Pots" },
+      { img: "src/assets/5inchimage.png", title: "5.5 Inches Pots" },
+      { img: "src/assets/Plantfood.png", title: "Plant Food" },
+      { img: "src/assets/plantcare.png", title: "Plant Care" },
+    ],
+    []
+  );
 
   return (
     <div className="bg-[#F5F5F5]">
@@ -1004,17 +999,36 @@ const Home = () => {
       </section>
 
       {/* Offer Section */}
+
       <section
-        className="w-[90%] mx-auto my-12 py-8 bg-gradient-to-r from-[#A3D9A5] to-[#21543D] rounded-3xl text-center shadow-lg text-white"
+        className="w-[90%] mx-auto my-12 py-12 bg-gradient-to-r from-[#54b455] to-[#21543D] rounded-3xl text-center shadow-lg text-white relative overflow-hidden"
         ref={offerSectionRef}
+        style={{
+          backgroundImage:
+            "url('https://images.wallpaperscraft.com/image/single/fern_plant_leaves_108470_1366x768.jpg')", // Add a suitable background image
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundBlendMode: "multiply", // Blend the gradient with the image
+        }}
       >
-        <h1 className="text-2xl font-semibold">
-          Get <span className="font-bold text-yellow-300">20% Off</span> on orders above ₹3999!
-        </h1>
-        <p className="text-lg mt-2">Hurry! Offer valid till stocks last.</p>
-        <button className="mt-6 bg-white text-[#21543D] py-2 px-6 rounded-full font-medium hover:bg-gray-100 transition shadow-md">
-          Shop Now
-        </button>
+        {/* Overlay to darken the background image */}
+        <div className="absolute inset-0 bg-black opacity-30"></div>
+
+        <div className="relative z-10">
+          <h1 className="text-3xl md:text-4xl font-semibold">
+            Get <span className="font-bold text-yellow-300">20% Off</span> on
+            orders above ₹3999!
+          </h1>
+          <p className="text-lg md:text-xl mt-4">
+            Hurry! Offer valid till stocks last.
+          </p>
+          <button
+            onClick={() => navigate("/plants")}
+            className="mt-8 bg-white text-[#21543D] py-3 px-8 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Shop Now
+          </button>
+        </div>
       </section>
 
       {/* Newly Launched Section */}

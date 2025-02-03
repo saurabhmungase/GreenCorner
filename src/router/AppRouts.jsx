@@ -12,6 +12,8 @@ import Cart from "../components/pages/Cart";
 import PageNotFound from "../components/pages/PageNotFound";
 import ProductDetails from "../components/utils/ProductDetails";
 import AddPlant from "../components/pages/AddPlant";
+import Wishlist from "../components/pages/Wishlist";
+import Admin from "../components/pages/adminpanel/Admin";
 // import Hero from "../components/Hero";  // Import Hero component here
 
 export let router = createBrowserRouter([
@@ -40,8 +42,8 @@ export let router = createBrowserRouter([
         element: <Seeds />,
       },
       {
-        path: "favorites",
-        element: <Favorites />,
+        path: "wishlist",
+        element: <Wishlist/>
       },
       {
         path: "cart",
@@ -66,8 +68,8 @@ export let router = createBrowserRouter([
     element : <PageNotFound></PageNotFound>
     
   },
-  // {
-  //   path : '/addplant',
-  //   children : <AddPlant/>
-  // }
+ {
+  path : "/admin",
+  element : <Admin></Admin>
+ }  
 ]);

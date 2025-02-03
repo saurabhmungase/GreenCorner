@@ -7,7 +7,6 @@ import Footer from '../utils/Footer';
 
 const LandingPage = () => {
      let data = useContext(context)
-     console.log(data);
      
   return (
     <div>

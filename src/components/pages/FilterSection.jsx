@@ -79,16 +79,7 @@ const FilterSection = ({ handleCategory, handlePrice, handleRating }) => {
         </div>
       </div>
       <hr className="my-4" />
-      <div>
-        <h3 className="font-semibold mb-2">Rating</h3>
-        <select className="w-full p-2 border rounded-md" onChange={handleRatingChange}>
-          <option value="5">5 Stars</option>
-          <option value="4">4 Stars & Up</option>
-          <option value="3">3 Stars & Up</option>
-          <option value="2">2 Stars & Up</option>
-          <option value="1">1 Star & Up</option>
-        </select>
-      </div>
+      
     </section>
   );
 };

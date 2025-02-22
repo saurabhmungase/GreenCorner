@@ -1,0 +1,11 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Plant Icon -->
+  <!-- <circle cx="100" cy="60" r="10" fill="#2c6e49" /> Plant Pot -->
+  <path d="M 100 60 Q 110 30, 130 60" stroke="#2c6e49" stroke-width="2" fill="none" /> <!-- Left Stem -->
+  <!-- <path d="M 100 60 Q 90 30, 70 60" stroke="#2c6e49" stroke-width="2" fill="none" /> Right Stem -->
+  <!-- <path d="M 130 60 Q 140 50, 150 60" stroke="#2c6e49" stroke-width="2" fill="none" /> Left Leaf -->
+  <!-- <path d="M 70 60 Q 60 50, 50 60" stroke="#2c6e49" stroke-width="2" fill="none" /> Right Leaf -->
+
+  <!-- GreenCorner Text -->
+  <!-- <text x="50" y="150" font-family="Arial, sans-serif" font-size="24" fill="#2c6e49">GreenCorner</text> -->
+</svg>

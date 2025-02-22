@@ -5,7 +5,7 @@ export let context = createContext()
 const AppContext = ({children}) => {
     let [Allplants , setplants] = useState([])
     useEffect(()=>{
-        axios.get("http://116.75.62.44:8000/plants").then((res)=>{
+        axios.get("http://localhost:5000/Plants").then((res)=>{
             setplants(res.data)
         })
     },[])

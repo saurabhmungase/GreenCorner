@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
@@ -13,7 +13,7 @@ const Admin = () => {
         <Sidebar />
         <div className="flex-1">
           <Header />
-        
+        <Outlet></Outlet>
         </div>
       </div>
     

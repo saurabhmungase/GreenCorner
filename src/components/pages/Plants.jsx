@@ -1,908 +1,3 @@
-// import React, { useContext, useEffect, useState } from "react";
-// import { context } from "../../context/AppContext";
-// import {  MdFavorite, MdFavoriteBorder } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-// import FilterSection from "./FilterSection";
-
-// const Plants = () => {
-//   const Contextdata = useContext(context);
-//   const navigate = useNavigate();
-//   const [sortBy, setSortBy] = useState("");
-//   const [wishlist, setWishlist] = useState([]); // State to track wishlist items
-//   let [filteredData, setFilteredData] = useState([])
-//   let [Data, setData] = useState([])
-//   const [plantcategory, setplantCategory] = useState();
-//   const [sortprice, setSortPrice] = useState();
-
-//   useEffect(() => {
-//     setData(Contextdata)
-//     setFilteredData(Contextdata)
-//   },[])
-
-//   const handleCategory = (category) => {
-//     setplantCategory(category);
-//   }
-//   const handlePrice = (price) => {
-//     setSortPrice(price);
-//   }
-
-  
-//   useEffect(() => {
-//     let filterItem = Data.filter((item) => {
-//       return item.category === sortBy
-//     })
-    
-//   },[plantcategory, sortprice])
-
-//   const handleSort = (type) => {
-//     setSortBy(type);
-//     // Implement sorting logic here
-//   };
-
-//   // Toggle wishlist for an item
-//   const toggleWishlist = (itemId) => {
-//     if (wishlist.includes(itemId)) {
-//       setWishlist(wishlist.filter((id) => id !== itemId)); // Remove from wishlist
-//     } else {
-//       setWishlist([...wishlist, itemId]); // Add to wishlist
-//     }
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row gap-6 p-6">
-//       {/* Filter Section */}
-  
-//     <FilterSection plantcategory={plantcategory} handleCategory={handleCategory}   handlePrice = {handlePrice} ></FilterSection> 
-
-//       {/* Product Section */}
-//       <section className="flex-1 ">
-//         <div className="flex justify-between items-center h-[0.5vh] mb-6">
-//           <h2 className="text-sm font-bold">Sort:</h2>
-//           <div className="flex gap-2">
-//             {["Set Price", "Popular", "Most New", "Price"].map((sort, index) => (
-//               <button
-//                 key={index}
-//                 className={`px-3 py-1 border text-sm rounded-md ${
-//                   sortBy === sort ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//                 } transition-colors`}
-//                 onClick={() => handleSort(sort)}
-//               >
-//                 {sort}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-//           {Contextdata.Allplants.map((item, i) => {
-//             const discountedPrice = (item.price - (12 / 100) * item.price).toFixed(2);
-//             const isWishlisted = wishlist.includes(item.id); // Check if item is in wishlist
-
-//             return (
-//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
-//                 {/* Wishlist Button */}
-//                 <button
-//                   className="absolute top-2 right-2 p-2 text-black  rounded-full shadow-md hover:bg-gray-100 transition-colors"
-//                   onClick={() => toggleWishlist(item.id)}
-//                 >
-//                   {isWishlisted ? (
-//                     <MdFavorite className="text-red-500" />
-//                   ) : (
-//                     <MdFavoriteBorder className="text-gray-500" />
-//                   )}
-//                 </button>
-
-//                 {/* Product Image */}
-//                 <img
-//                   src={item.primaryImage}
-//                   alt={item.name}
-//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
-//                   onClick={() => navigate("/details", { state: { item } })}
-//                 />
-
-//                 {/* Product Details */}
-//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
-//                 <div className="flex items-center gap-2 mb-4">
-//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
-//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
-//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
-//                 </div>
-//                 <button className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
-//                   Add to Basket
-//                 </button>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Plants;
-
-// import React, { useContext, useEffect, useState } from "react";
-// import { context } from "../../context/AppContext";
-// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-// import FilterSection from "./FilterSection";
-// import axios from "axios";
-
-// const Plants = () => {
-//   const Contextdata = useContext(context);
-//   const navigate = useNavigate();
-//   const [sortBy, setSortBy] = useState("");
-//   const [wishlist, setWishlist] = useState({}); // Wishlist state
-//   const [filteredData, setFilteredData] = useState([]);
-//   const [Data, setData] = useState([]);
-//   const [plantcategory, setPlantCategory] = useState([]); // Store selected categories as an array
-//   const [sortprice, setSortPrice] = useState(1000); // Default max price
-
-//   useEffect(() => {
-//     setData(Contextdata.Allplants);
-//     setFilteredData(Contextdata.Allplants);
-//   }, [Contextdata]);
-
-//   // Handle category selection
-//   const handleCategory = (selectedCategories) => {
-//     setPlantCategory(selectedCategories);
-//   };
-
-//   // Handle price filtering
-//   const handlePrice = (price) => {
-//     setSortPrice(price);
-//   };
-
-//   // Apply filters when category or price changes
-//   useEffect(() => {
-//     let filtered = Data;
-
-//     // Filter by category
-//     if (plantcategory.length > 0) {
-//       filtered = filtered.filter((item) => plantcategory.includes(item.category.toLowerCase()));
-//     }
-
-//     // Filter by price range
-//     filtered = filtered.filter((item) => item.price <= sortprice);
-
-//     setFilteredData(filtered);
-//   }, [plantcategory, sortprice, Data]);
-
-//   // Handle sorting
-//   const handleSort = (type) => {
-//     setSortBy(type);
-//   };
-
-//   useEffect(() => {
-//     let sortedData = [...filteredData];
-
-//     if (sortBy === "Price") {
-//       sortedData.sort((a, b) => a.price - b.price);
-//     } else if (sortBy === "Most New") {
-//       sortedData.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-//     }
-
-//     setFilteredData(sortedData);
-//   }, [sortBy]);
-
-//   // Toggle wishlist
-//   const toggleWishlist = (itemId) => {
-//     setWishlist({itemId})
-//     axios.post('http://localhost:5000/wishlist', {itemId})
-   
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row gap-6 p-6">
-//       {/* Filter Section */}
-//       <FilterSection handleCategory={handleCategory} handlePrice={handlePrice} />
-
-//       {/* Product Section */}
-//       <section className="flex-1 bg-transparent">
-//         <div className="flex justify-between items-center bg-transparent mb-2">
-//           <h2 className="text-sm font-bold">Sort:</h2>
-//           <div className="flex gap-2">
-//             {["Most New", "Price"].map((sort, index) => (
-//               <button
-//                 key={index}
-//                 className={`px-3 py-1 border text-sm rounded-md ${
-//                   sortBy === sort ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//                 } transition-colors`}
-//                 onClick={() => handleSort(sort)}
-//               >
-//                 {sort}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-//           {filteredData.map((item, i) => {
-//             const discountedPrice = (item.price - (12 / 100) * item.price).toFixed(2);
-//             const isWishlisted = wishlist.includes(item.id);
-
-//             return (
-//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
-//                 {/* Wishlist Button */}
-//                 <button
-//                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
-//                   onClick={() => toggleWishlist(item.id)}
-//                 >
-//                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
-//                 </button>
-
-//                 {/* Product Image */}
-//                 <img
-//                   src={item.primaryImage}
-//                   alt={item.name}
-//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
-//                   onClick={() => navigate("/details", { state: { item } })}
-//                 />
-
-//                 {/* Product Details */}
-//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
-//                 <div className="flex items-center gap-2 mb-4">
-//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
-//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
-//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
-//                 </div>
-//                 <button className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
-//                   Add to Basket
-//                 </button>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Plants;
-
-
-// import React, { useContext, useEffect, useState } from "react";
-// import { context } from "../../context/AppContext";
-// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-// import FilterSection from "./FilterSection";
-// import axios from "axios";
-
-// const Plants = () => {
-//   const Contextdata = useContext(context);
-//   const navigate = useNavigate();
-//   const [sortBy, setSortBy] = useState("");
-//   const [wishlist, setWishlist] = useState({}); // Store wishlist as an object
-//   const [filteredData, setFilteredData] = useState([]);
-//   const [Data, setData] = useState([]);
-//   const [plantcategory, setPlantCategory] = useState([]);
-//   const [sortprice, setSortPrice] = useState(1000);
-
-//   useEffect(() => {
-//     setData(Contextdata.Allplants);
-//     setFilteredData(Contextdata.Allplants);
-//   }, [Contextdata]);
-
-//   const handleCategory = (selectedCategories) => {
-//     setPlantCategory(selectedCategories);
-//   };
-
-//   const handlePrice = (price) => {
-//     setSortPrice(price);
-//   };
-
-//   useEffect(() => {
-//     let filtered = Data;
-
-//     if (plantcategory.length > 0) {
-//       filtered = filtered.filter((item) => plantcategory.includes(item.category.toLowerCase()));
-//     }
-
-//     filtered = filtered.filter((item) => item.price <= sortprice);
-
-//     setFilteredData(filtered);
-//   }, [plantcategory, sortprice, Data]);
-
-//   const handleSort = (type) => {
-//     setSortBy(type);
-//   };
-
-//   useEffect(() => {
-//     let sortedData = [...filteredData];
-
-//     if (sortBy === "Price") {
-//       sortedData.sort((a, b) => a.price - b.price);
-//     } else if (sortBy === "Most New") {
-//       sortedData.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-//     }
-
-//     setFilteredData(sortedData);
-//   }, [sortBy]);
-
-//   // Toggle wishlist
-//   const toggleWishlist = async (itemId) => {
-//     const isWishlisted = wishlist[itemId];
-
-//     setWishlist((prevWishlist) => ({
-//       ...prevWishlist,
-//       [itemId]: !isWishlisted,
-//     }));
-
-//     if (!isWishlisted) {
-//       await axios.post("http://localhost:5000/wishlist", { itemId });
-//     } else {
-//       await axios.delete(`http://localhost:5000/wishlist/${itemId}`);
-//     }
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row gap-6 p-6">
-//       <FilterSection handleCategory={handleCategory} handlePrice={handlePrice} />
-
-//       <section className="flex-1 bg-transparent">
-//         <div className="flex justify-between items-center bg-transparent mb-2">
-//           <h2 className="text-sm font-bold">Sort:</h2>
-//           <div className="flex gap-2">
-//             {["Most New", "Price"].map((sort, index) => (
-//               <button
-//                 key={index}
-//                 className={`px-3 py-1 border text-sm rounded-md ${
-//                   sortBy === sort ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//                 } transition-colors`}
-//                 onClick={() => handleSort(sort)}
-//               >
-//                 {sort}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-//           {filteredData.map((item, i) => {
-//             const discountedPrice = (item.price - (12 / 100) * item.price).toFixed(2);
-//             const isWishlisted = !!wishlist[item.id];
-
-//             return (
-//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
-//                 <button
-//                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
-//                   onClick={() => toggleWishlist(item.id)}
-//                 >
-//                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
-//                 </button>
-
-//                 <img
-//                   src={item.primaryImage}
-//                   alt={item.name}
-//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
-//                   onClick={() => navigate("/details", { state: { item } })}
-//                 />
-
-//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
-//                 <div className="flex items-center gap-2 mb-4">
-//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
-//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
-//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
-//                 </div>
-//                 <button className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
-//                   Add to Basket
-//                 </button>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Plants;
-
-
-
-// import React, { useContext, useEffect, useState } from "react";
-// import { context } from "../../context/AppContext";
-// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-// import FilterSection from "./FilterSection";
-// import axios from "axios";
-
-// const Plants = () => {
-//   const Contextdata = useContext(context);
-//   const navigate = useNavigate();
-//   const [sortBy, setSortBy] = useState("");
-//   const [wishlist, setWishlist] = useState({}); // Store wishlist as an object
-//   const [filteredData, setFilteredData] = useState([]);
-//   const [Data, setData] = useState([]);
-//   const [plantcategory, setPlantCategory] = useState([]);
-//   const [sortprice, setSortPrice] = useState(1000);
-
-//   useEffect(() => {
-//     setData(Contextdata.Allplants);
-//     setFilteredData(Contextdata.Allplants);
-//   }, [Contextdata]);
-
-//   const handleCategory = (selectedCategories) => {
-//     setPlantCategory(selectedCategories);
-//   };
-
-//   const handlePrice = (price) => {
-//     setSortPrice(price);
-//   };
-
-//   useEffect(() => {
-//     let filtered = Data;
-
-//     if (plantcategory.length > 0) {
-//       filtered = filtered.filter((item) => plantcategory.includes(item.category.toLowerCase()));
-//     }
-
-//     filtered = filtered.filter((item) => item.price <= sortprice);
-
-//     setFilteredData(filtered);
-//   }, [plantcategory, sortprice, Data]);
-
-//   const handleSort = (type) => {
-//     setSortBy(type);
-//   };
-
-//   useEffect(() => {
-//     let sortedData = [...filteredData];
-
-//     if (sortBy === "Price") {
-//       sortedData.sort((a, b) => a.price - b.price);
-//     } else if (sortBy === "Most New") {
-//       sortedData.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-//     }
-
-//     setFilteredData(sortedData);
-//   }, [sortBy]);
-
-//   // Fetch initial wishlist from the server
-//   useEffect(() => {
-//     axios.get("http://localhost:5000/wishlist")
-//       .then((res) => {
-//         // Set the initial wishlist state from the backend
-//         const initialWishlist = {};
-//         res.data.forEach((item) => {
-//           initialWishlist[item.itemId] = true; // Mark item as wishlisted
-//         });
-//         setWishlist(initialWishlist);
-//       })
-//       .catch((err) => console.error("Error fetching wishlist:", err));
-//   }, []);
-
-//   // Toggle wishlist
-//   const toggleWishlist = async (itemId) => {
-//     const isWishlisted = wishlist[itemId];
-
-//     // Update local wishlist state
-//     const updatedWishlist = { ...wishlist, [itemId]: !isWishlisted };
-//     setWishlist(updatedWishlist);
-
-//     if (!isWishlisted) {
-//       // Add to wishlist
-//       await axios.post("http://localhost:5000/wishlist", { itemId });
-//     } else {
-//       // Remove from wishlist
-//       await axios.delete(`http://localhost:5000/wishlist/${itemId}`);
-//     }
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row gap-6 p-6">
-//       <FilterSection handleCategory={handleCategory} handlePrice={handlePrice} />
-
-//       <section className="flex-1 bg-transparent">
-//         <div className="flex justify-between items-center bg-transparent mb-2">
-//           <h2 className="text-sm font-bold">Sort:</h2>
-//           <div className="flex gap-2">
-//             {["Most New", "Price"].map((sort, index) => (
-//               <button
-//                 key={index}
-//                 className={`px-3 py-1 border text-sm rounded-md ${
-//                   sortBy === sort ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//                 } transition-colors`}
-//                 onClick={() => handleSort(sort)}
-//               >
-//                 {sort}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-//           {filteredData.map((item, i) => {
-//             const discountedPrice = (item.price - (12 / 100) * item.price).toFixed(2);
-//             const isWishlisted = !!wishlist[item.id];
-
-//             return (
-//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
-//                 <button
-//                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
-//                   onClick={() => toggleWishlist(item.id)}
-//                 >
-//                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
-//                 </button>
-
-//                 <img
-//                   src={item.primaryImage}
-//                   alt={item.name}
-//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
-//                   onClick={() => navigate("/details", { state: { item } })}
-//                 />
-
-//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
-//                 <div className="flex items-center gap-2 mb-4">
-//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
-//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
-//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
-//                 </div>
-//                 <button className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
-//                   Add to Basket
-//                 </button>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Plants;
-
-
-// import React, { useContext, useEffect, useState } from "react";
-// import { context } from "../../context/AppContext";
-// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-// import FilterSection from "./FilterSection";
-// import axios from "axios";
-
-// const Plants = () => {
-//   const Contextdata = useContext(context);
-//   const navigate = useNavigate();
-//   const [sortBy, setSortBy] = useState("");
-//   const [wishlist, setWishlist] = useState({}); // Store wishlist as an object
-//   const [filteredData, setFilteredData] = useState([]);
-//   const [Data, setData] = useState([]);
-//   const [plantcategory, setPlantCategory] = useState([]);
-//   const [sortprice, setSortPrice] = useState(1000);
-
-//   useEffect(() => {
-//     setData(Contextdata.Allplants);
-//     setFilteredData(Contextdata.Allplants);
-//   }, [Contextdata]);
-
-//   const handleCategory = (selectedCategories) => {
-//     setPlantCategory(selectedCategories);
-//   };
-
-//   const handlePrice = (price) => {
-//     setSortPrice(price);
-//   };
-
-//   useEffect(() => {
-//     let filtered = Data;
-  
-//     if (plantcategory.length > 0) {
-//       // Filter based on category, check if any of the selected categories match
-//       filtered = filtered.filter((item) => {
-//         return item.categories && item.categories.some((category) =>
-//           plantcategory.includes(category.toLowerCase())
-//         );
-//       });
-//     }
-  
-//     // Filter based on price
-//     filtered = filtered.filter((item) => item.price <= sortprice);
-  
-//     setFilteredData(filtered);
-//   }, [plantcategory, sortprice, Data]);
-  
-  
-
-//   const handleSort = (type) => {
-//     setSortBy(type);
-//   };
-
-//   useEffect(() => {
-//     let sortedData = [...filteredData];
-
-//     if (sortBy === "Price") {
-//       sortedData.sort((a, b) => a.price - b.price);
-//     } else if (sortBy === "Most New") {
-//       sortedData.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-//     }
-
-//     setFilteredData(sortedData);
-//   }, [sortBy]);
-
-//   // Fetch initial wishlist from the server
-//   useEffect(() => {
-//     axios.get("http://localhost:5000/wishlist")
-//       .then((res) => {
-//         // Set the initial wishlist state from the backend
-//         const initialWishlist = {};
-//         res.data.forEach((item) => {
-//           initialWishlist[item.itemId] = item.id; // Map itemId to id (which is the key in JSON server)
-//         });
-//         setWishlist(initialWishlist);
-//       })
-//       .catch((err) => console.error("Error fetching wishlist:", err));
-//   }, []);
-
-//   // Toggle wishlist
-//   const toggleWishlist = async (itemId) => {
-//     const isWishlisted = wishlist[itemId];
-
-//     // Update local wishlist state
-//     const updatedWishlist = { ...wishlist };
-//     if (isWishlisted) {
-//       // Remove from local state if already wishlisted
-//       delete updatedWishlist[itemId];
-//       await axios.delete(`http://localhost:5000/wishlist/${isWishlisted}`); // Remove from backend using the correct id
-//     } else {
-//       // Add to local state if not wishlisted
-//       const response = await axios.post("http://localhost:5000/wishlist", { itemId });
-//       updatedWishlist[itemId] = response.data.id; // Store the id from the response
-//     }
-
-//     setWishlist(updatedWishlist); // Update local state after making the change
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row gap-6 p-6">
-//       <FilterSection handleCategory={handleCategory} handlePrice={handlePrice} />
-
-//       <section className="flex-1 bg-transparent">
-//         {plantcategory.length > 0 ?(
-//       <div className="flex justify-between items-center bg-transparent mb-2">
-//           <h2 className="text-sm font-bold">Sort:</h2>
-//           <div className="flex gap-2">
-//             {plantcategory.map((sort, index) => (
-//               <button
-//                 key={index}
-//                 className={`px-3 py-1 border text-sm rounded-md ${
-//                   sortBy === sort ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//                 } transition-colors`}
-//                 onClick={() => handleSort(sort)}
-//               >
-//                 {sort}
-//               </button>
-//             ))}
-//           </div>
-//         </div>) : null}
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-//           {filteredData.map((item, i) => {
-//             const discountedPrice = (item.price - (12 / 100) * item.price).toFixed(2);
-//             const isWishlisted = !!wishlist[item.id];
-
-//             return (
-//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
-//                 <button
-//                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
-//                   onClick={() => toggleWishlist(item.id)}
-//                 >
-//                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
-//                 </button>
-
-//                 <img
-//                   src={item.primaryImage}
-//                   alt={item.name}
-//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
-//                   onClick={() => navigate("/details", { state: { item } })}
-//                 />
-
-//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
-//                 <div className="flex items-center gap-2 mb-4">
-//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
-//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
-//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
-//                 </div>
-//                 <button className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
-//                   Add to Basket
-//                 </button>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Plants;
-
-// import React, { useContext, useEffect, useState } from "react";
-// import { context } from "../../context/AppContext";
-// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-// import FilterSection from "./FilterSection";
-// import axios from "axios";
-
-// const Plants = () => {
-//   const Contextdata = useContext(context);
-//   const navigate = useNavigate();
-//   const [sortBy, setSortBy] = useState("");
-//   const [wishlist, setWishlist] = useState({});
-//   const [AddToCart, setAddToCart] = useState({
-//     name: "",
-//     price: "",
-//     image: "",
-//     quantity: 1,
-//   });
-//   const [filteredData, setFilteredData] = useState([]);
-//   const [Data, setData] = useState([]);
-//   const [plantcategory, setPlantCategory] = useState([]);
-//   const [sortprice, setSortPrice] = useState(1000);
-
-//   useEffect(() => {
-//     setData(Contextdata.Allplants);
-//     setFilteredData(Contextdata.Allplants);
-//   }, [Contextdata]);
-
-//   const handleCategory = (selectedCategories) => {
-//     setPlantCategory(selectedCategories);
-//     setSortBy(""); // Reset sorting
-//   };
-
-//   const handlePrice = (price) => {
-//     setSortPrice(price);
-//     setSortBy(""); // Reset sorting
-//   };
-
-//   useEffect(() => {
-//     let filtered = Data;
-
-//     if (plantcategory.length > 0) {
-//       filtered = filtered.filter((item) => {
-//         const categories = item.categories || [];
-//         return categories.some((category) =>
-//           plantcategory.includes(category.toLowerCase())
-//         );
-//       });
-//     }
-
-//     filtered = filtered.filter((item) => item.price <= sortprice);
-//     setFilteredData(filtered);
-//   }, [plantcategory, sortprice, Data]);
-
-//   const handleSort = (type) => {
-//     setSortBy(type);
-//   };
-
-//   useEffect(() => {
-//     let sortedData = [...filteredData];
-
-//     if (sortBy === "Price") {
-//       sortedData.sort((a, b) => a.price - b.price);
-//     } else if (sortBy === "Most New") {
-//       sortedData.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-//     }
-
-//     setFilteredData(sortedData);
-//   }, [sortBy]);
-
-//   useEffect(() => {
-//     axios.get("http://localhost:5000/wishlist")
-//       .then((res) => {
-//         const initialWishlist = {};
-//         res.data.forEach((item) => {
-//           initialWishlist[item.itemId] = item.id;
-//         });
-//         setWishlist(initialWishlist);
-//       })
-//       .catch((err) => console.error("Error fetching wishlist:", err));
-//   }, []);
-
-//   const toggleWishlist = async (itemId) => {
-//     const isWishlisted = wishlist[itemId];
-
-//     try {
-//       const updatedWishlist = { ...wishlist };
-//       if (isWishlisted) {
-//         await axios.delete(`http://localhost:5000/wishlist/${isWishlisted}`);
-//         delete updatedWishlist[itemId];
-//       } else {
-//         const response = await axios.post("http://localhost:5000/wishlist", { itemId });
-//         updatedWishlist[itemId] = response.data.id;
-//       }
-//       setWishlist(updatedWishlist);
-//     } catch (error) {
-//       console.error("Error toggling wishlist:", error);
-//     }
-//   };
-//  let handleAddToBasket = async (name , price, image) => {
-//   console.log(name , price , image);
-  
-//   setAddToCar({ ...state, name: name , price: price , image: image });  
-
-//   try {
-//     await axios.post("http://localhost:5000/cart", AddToCart);
-//     alert("Item added to cart!");
-//   } catch (error) {
-//     console.error("Error adding to cart:", error);
-//   }
-//  }
-
-//   return (
-//     <div className="flex flex-col lg:flex-row gap-6 p-6">
-//       <FilterSection handleCategory={handleCategory} handlePrice={handlePrice} />
-
-//       <section className="flex-1 bg-transparent">
-//         <div className="flex justify-between items-center bg-transparent mb-2">
-//           <h2 className="text-sm font-bold">Sort:</h2>
-//           <div className="flex gap-2">
-//             <button
-//               className={`px-3 py-1 border text-sm rounded-md ${
-//                 sortBy === "Price" ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//               } transition-colors`}
-//               onClick={() => handleSort("Price")}
-//             >
-//               Price
-//             </button>
-//             <button
-//               className={`px-3 py-1 border text-sm rounded-md ${
-//                 sortBy === "Most New" ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
-//               } transition-colors`}
-//               onClick={() => handleSort("Most New")}
-//             >
-//               Most New
-//             </button>
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
-//           {filteredData.map((item, i) => {
-//             const discountedPrice = (item.price * 1.12).toFixed(2);
-//             const isWishlisted = !!wishlist[item.id];
-
-//             return (
-//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
-//                 <button
-//                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
-//                   onClick={() => toggleWishlist(item.id)}
-//                 >
-//                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
-//                 </button>
-
-//                 <img
-//                   src={item.primaryImage}
-//                   alt={item.name}
-//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
-//                   onClick={() => navigate("/details", { state: { item } })}
-//                 />
-
-//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
-//                 <div className="flex items-center gap-2 mb-4">
-//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
-//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
-//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
-//                 </div>
-//                 <button
-//                 onClick={() => handleAddToBasket(item.name , item.price , item.primaryImage)}
-//                  className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
-//                   Add to Basket
-//                 </button>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Plants;
-
-
-
-
 
 import React, { useContext, useEffect, useState } from "react";
 import { context } from "../../context/AppContext";
@@ -913,47 +8,37 @@ import axios from "axios";
 
 const Plants = () => {
   const Contextdata = useContext(context);
+  console.log(Contextdata);
+  
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState("");
   const [wishlist, setWishlist] = useState({});
+  const [AddToCart, setAddToCart] = useState({
+    name: "",
+    price: "",
+    image: "",
+    quantity: 1,
+  });
   const [filteredData, setFilteredData] = useState([]);
   const [Data, setData] = useState([]);
   const [plantcategory, setPlantCategory] = useState([]);
   const [sortprice, setSortPrice] = useState(1000);
 
-  // Fetch initial data from context
   useEffect(() => {
     setData(Contextdata.Allplants);
     setFilteredData(Contextdata.Allplants);
-  }, [Contextdata.Allplants]);
+  }, [Contextdata]);
 
-  // Fetch wishlist data
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/wishlist")
-      .then((res) => {
-        const initialWishlist = {};
-        res.data.forEach((item) => {
-          initialWishlist[item.itemId] = item.id;
-        });
-        setWishlist(initialWishlist);
-      })
-      .catch((err) => console.error("Error fetching wishlist:", err));
-  }, []);
-
-  // Handle category filter
   const handleCategory = (selectedCategories) => {
     setPlantCategory(selectedCategories);
     setSortBy(""); // Reset sorting
   };
 
-  // Handle price filter
   const handlePrice = (price) => {
     setSortPrice(price);
     setSortBy(""); // Reset sorting
   };
 
-  // Apply filters and sorting
   useEffect(() => {
     let filtered = Data;
 
@@ -967,49 +52,71 @@ const Plants = () => {
     }
 
     filtered = filtered.filter((item) => item.price <= sortprice);
+    setFilteredData(filtered);
+  }, [plantcategory, sortprice, Data]);
+
+  const handleSort = (type) => {
+    setSortBy(type);
+  };
+
+  useEffect(() => {
+    let sortedData = [...filteredData];
 
     if (sortBy === "Price") {
-      filtered.sort((a, b) => a.price - b.price);
+      sortedData.sort((a, b) => a.price - b.price);
     } else if (sortBy === "Most New") {
-      filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+      sortedData.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
     }
 
-    setFilteredData(filtered);
-  }, [plantcategory, sortprice, Data, sortBy]);
+    setFilteredData(sortedData);
+  }, [sortBy]);
 
-  // Toggle wishlist
+  useEffect(() => {
+    axios.get("http://localhost:5000/wishlist")
+      .then((res) => {
+        const initialWishlist = {};
+        res.data.forEach((item) => {
+          initialWishlist[item.itemId] = item.id;
+        });
+        setWishlist(initialWishlist);
+      })
+      .catch((err) => console.error("Error fetching wishlist:", err));
+  }, []);
+
   const toggleWishlist = async (itemId) => {
     const isWishlisted = wishlist[itemId];
 
     try {
+      const updatedWishlist = { ...wishlist };
       if (isWishlisted) {
         await axios.delete(`http://localhost:5000/wishlist/${isWishlisted}`);
-        setWishlist((prev) => {
-          const updatedWishlist = { ...prev };
-          delete updatedWishlist[itemId];
-          return updatedWishlist;
-        });
+        delete updatedWishlist[itemId];
       } else {
         const response = await axios.post("http://localhost:5000/wishlist", { itemId });
-        setWishlist((prev) => ({
-          ...prev,
-          [itemId]: response.data.id,
-        }));
+        updatedWishlist[itemId] = response.data.id;
       }
+      setWishlist(updatedWishlist);
     } catch (error) {
       console.error("Error toggling wishlist:", error);
     }
   };
-
-  // Add to cart
   const handleAddToBasket = async (name, price, image) => {
+    console.log("Adding to cart:", name, price, image);
+  
+    const itemToAdd = {
+      name: name,
+      price: price,
+      image: image,
+      quantity: 1,
+    };
+  
     try {
-      await axios.post("http://localhost:5000/cart", { name, price, image, quantity: 1 });
-      alert("Item added to cart!");
+      await axios.post("http://localhost:5000/cart", itemToAdd);
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
   };
+  
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6">
@@ -1048,7 +155,6 @@ const Plants = () => {
                 <button
                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
                   onClick={() => toggleWishlist(item.id)}
-                  aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                 >
                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
                 </button>
@@ -1067,9 +173,8 @@ const Plants = () => {
                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleAddToBasket(item.name, item.price, item.primaryImage)}
-                  className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors"
-                >
+                onClick={() => handleAddToBasket(item.name , item.price , item.primaryImage)}
+                 className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors">
                   Add to Basket
                 </button>
               </div>
@@ -1082,6 +187,189 @@ const Plants = () => {
 };
 
 export default Plants;
+
+
+
+
+
+// import React, { useContext, useEffect, useState } from "react";
+// import { context } from "../../context/AppContext";
+// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+// import { useNavigate } from "react-router-dom";
+// import FilterSection from "./FilterSection";
+// import axios from "axios";
+
+// const Plants = () => {
+//   const Contextdata = useContext(context);
+//   const navigate = useNavigate();
+//   const [sortBy, setSortBy] = useState("");
+//   const [wishlist, setWishlist] = useState({});
+//   const [filteredData, setFilteredData] = useState([]);
+//   const [Data, setData] = useState([]);
+//   const [plantcategory, setPlantCategory] = useState([]);
+//   const [sortprice, setSortPrice] = useState(1000);
+
+//   // Fetch initial data from context
+//   useEffect(() => {
+//     setData(Contextdata.Allplants);
+//     setFilteredData(Contextdata.Allplants);
+//   }, [Contextdata.Allplants]);
+
+//   // Fetch wishlist data
+//   useEffect(() => {
+//     axios
+//       .get("http://localhost:5000/wishlist")
+//       .then((res) => {
+//         const initialWishlist = {};
+//         res.data.forEach((item) => {
+//           initialWishlist[item.itemId] = item.id;
+//         });
+//         setWishlist(initialWishlist);
+//       })
+//       .catch((err) => console.error("Error fetching wishlist:", err));
+//   }, []);
+
+//   // Handle category filter
+//   const handleCategory = (selectedCategories) => {
+//     setPlantCategory(selectedCategories);
+//     setSortBy(""); // Reset sorting
+//   };
+
+//   // Handle price filter
+//   const handlePrice = (price) => {
+//     setSortPrice(price);
+//     setSortBy(""); // Reset sorting
+//   };
+
+//   // Apply filters and sorting
+//   useEffect(() => {
+//     let filtered = Data;
+
+//     if (plantcategory.length > 0) {
+//       filtered = filtered.filter((item) => {
+//         const categories = item.categories || [];
+//         return categories.some((category) =>
+//           plantcategory.includes(category.toLowerCase())
+//         );
+//       });
+//     }
+
+//     filtered = filtered.filter((item) => item.price <= sortprice);
+
+//     if (sortBy === "Price") {
+//       filtered.sort((a, b) => a.price - b.price);
+//     } else if (sortBy === "Most New") {
+//       filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+//     }
+
+//     setFilteredData(filtered);
+//   }, [plantcategory, sortprice, Data, sortBy]);
+
+//   // Toggle wishlist
+//   const toggleWishlist = async (itemId) => {
+//     const isWishlisted = wishlist[itemId];
+
+//     try {
+//       if (isWishlisted) {
+//         await axios.delete(`http://localhost:5000/wishlist/${isWishlisted}`);
+//         setWishlist((prev) => {
+//           const updatedWishlist = { ...prev };
+//           delete updatedWishlist[itemId];
+//           return updatedWishlist;
+//         });
+//       } else {
+//         const response = await axios.post("http://localhost:5000/wishlist", { itemId });
+//         setWishlist((prev) => ({
+//           ...prev,
+//           [itemId]: response.data.id,
+//         }));
+//       }
+//     } catch (error) {
+//       console.error("Error toggling wishlist:", error);
+//     }
+//   };
+
+//   // Add to cart
+//   const handleAddToBasket = async (name, price, image) => {
+//     try {
+//       await axios.post("http://localhost:5000/cart", { name, price, image, quantity: 1 });
+//       alert("Item added to cart!");
+//     } catch (error) {
+//       console.error("Error adding to cart:", error);
+//     }
+//   };
+
+//   return (
+//     <div className="flex flex-col lg:flex-row gap-6 p-6">
+//       <FilterSection handleCategory={handleCategory} handlePrice={handlePrice} />
+
+//       <section className="flex-1 bg-transparent">
+//         <div className="flex justify-between items-center bg-transparent mb-2">
+//           <h2 className="text-sm font-bold">Sort:</h2>
+//           <div className="flex gap-2">
+//             <button
+//               className={`px-3 py-1 border text-sm rounded-md ${
+//                 sortBy === "Price" ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
+//               } transition-colors`}
+//               onClick={() => handleSort("Price")}
+//             >
+//               Price
+//             </button>
+//             <button
+//               className={`px-3 py-1 border text-sm rounded-md ${
+//                 sortBy === "Most New" ? "bg-green-700 text-white" : "bg-gray-100 hover:bg-gray-200"
+//               } transition-colors`}
+//               onClick={() => handleSort("Most New")}
+//             >
+//               Most New
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 h-[90vh] overflow-auto [&::-webkit-scrollbar]:hidden">
+//           {filteredData.map((item, i) => {
+//             const discountedPrice = (item.price * 1.12).toFixed(2);
+//             const isWishlisted = !!wishlist[item.id];
+
+//             return (
+//               <div key={i} className="bg-transparent rounded-md p-2 flex flex-col items-center relative">
+//                 <button
+//                   className="absolute top-2 right-2 p-2 text-black rounded-full shadow-md hover:bg-gray-100 transition-colors"
+//                   onClick={() => toggleWishlist(item.id)}
+//                   aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+//                 >
+//                   {isWishlisted ? <MdFavorite className="text-red-500" /> : <MdFavoriteBorder className="text-gray-500" />}
+//                 </button>
+
+//                 <img
+//                   src={item.primaryImage}
+//                   alt={item.name}
+//                   className="w-full h-64 object-cover mb-4 cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-md"
+//                   onClick={() => navigate("/details", { state: { item } })}
+//                 />
+
+//                 <h1 className="text-xl font-medium text-green-800 mb-2 text-center">{item.name}</h1>
+//                 <div className="flex items-center gap-2 mb-4">
+//                   <span className="text-l font-bold text-green-600">₹{item.price}</span>
+//                   <span className="text-l text-gray-500 line-through">₹{discountedPrice}</span>
+//                   <span className="bg-[#83C026] text-white text-xs px-2 py-1 rounded-full">12% OFF</span>
+//                 </div>
+//                 <button
+//                   onClick={() => handleAddToBasket(item.name, item.price, item.primaryImage)}
+//                   className="w-10/12 bg-green-900 hover:bg-green-950 text-white p-1 text-lg rounded-full transition-colors"
+//                 >
+//                   Add to Basket
+//                 </button>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       </section>
+//     </div>
+//   );
+// };
+
+// export default Plants;
 
 
 
